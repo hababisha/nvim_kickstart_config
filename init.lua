@@ -303,10 +303,20 @@ require('lazy').setup({
     dependencies = { 'nvim-lua/plenary.nvim' },
     config = function()
       local harpoon = require 'harpoon'
-      harpoon:setup()
 
+      harpoon:setup {
+        settings = {
+          save_on_toggle = true,
+          sync_on_ui_close = true,
+        },
+      }
+
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = 'harpoon',
+        callback = function() vim.bo.buflisted = false end,
+      })
       -- Keymaps for convenience
-      vim.keymap.set('n', '<leader>a', function() harpoon:list():append() end, { desc = 'Harpoon Add File' })
+      vim.keymap.set('n', '<leader>a', function() harpoon:list():add() end, { desc = 'Harpoon Add File' })
       vim.keymap.set('n', '<leader>h', function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = 'Harpoon Quick Menu' })
 
       -- Quick nav
