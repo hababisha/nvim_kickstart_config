@@ -56,6 +56,8 @@ Kickstart Guide:
   Once you've completed that, you can continue working through **AND READING** the rest
   of the kickstart init.lua.
 
+  test
+
   Next, run AND READ `:help`.
     This will open up a help window with some basic information
     about reading, navigating and searching the builtin help documentation.
