@@ -136,7 +136,7 @@ vim.o.updatetime = 250
 
 -- Decrease mapped sequence wait time
 vim.o.timeoutlen = 300
-
+vim.o.ttimeoutlen = 50
 -- Configure how new splits should be opened
 vim.o.splitright = true
 vim.o.splitbelow = true
@@ -610,8 +610,19 @@ require('lazy').setup({
         opts = {
           keymap = {
             preset = 'default',
-            -- Make Enter confirm the selection
-            ['<CR>'] = { 'accept', 'fallback' },
+            -- Use a cleaner fallback structure for raw terminals
+            ['<CR>'] = {
+              function(cmp)
+                if cmp.is_visible() then return cmp.accept() end
+              end,
+              'fallback',
+            },
+            ['<Tab>'] = {
+              function(cmp)
+                if cmp.is_visible() then return cmp.select_next() end
+              end,
+              'fallback',
+            },
           },
         },
       },
@@ -927,16 +938,26 @@ require('lazy').setup({
       signature = { enabled = true },
     },
   },
-
   {
-    'Mofiqul/dracula.nvim',
+    'folke/tokyonight.nvim',
     priority = 1000,
     config = function()
-      require('dracula').setup {
-        italic_comment = false,
+      require('tokyonight').setup {
+        style = 'night',
+        transparent = false,
+        styles = {
+          comments = { italic = false },
+          sidebars = 'dark',
+          floats = 'dark',
+        },
+        on_colors = function(colors)
+          colors.bg = '#000000' -- pure black base
+          colors.bg_dark = '#000000'
+          colors.bg_float = '#0a0a0a'
+        end,
       }
 
-      vim.cmd.colorscheme 'dracula'
+      vim.cmd.colorscheme 'tokyonight-night'
     end,
   },
   -- Highlight todo, notes, etc in comments
